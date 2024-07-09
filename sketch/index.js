@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import getStarfield from "./src/getStarfield";
-import { getFresnelMat } from "./src/getFresnelMat";
+import getStarfield from "./src/getStarfield.js";
+import { getFresnelMat } from "./src/getFresnelMat.js";
 
 // set width and height
 const w = window.innerWidth;
