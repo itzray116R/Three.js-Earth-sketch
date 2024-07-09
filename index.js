@@ -1,47 +1,41 @@
 import * as THREE from "three";
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const w = window.innerWidth ;
+const h = window.innerHeight;
+
 //set scene camera and renderer
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = 5;
 const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setSize(w,h);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
 document.body.appendChild(renderer.domElement);
 
-const controls = new OrbitControls( camera, renderer.domElement );
-//controls.update() must be called after any manual changes to the camera's transform
-camera.position.set( 0, 20, 100 );
-controls.update();
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.03;
 
-//create a cube
 const geometry = new THREE.BoxGeometry();
-//make the cube navy blue
-const material = new THREE.MeshBasicMaterial({ color: 0x000080 });
-// const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+const material = new THREE.MeshStandardMaterial({
+    color: 0xffff00,
+});
+
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
-camera.position.z = 5;
 
-//add wireframe and light on the cube
+const hemilight = new THREE.HemisphereLight(0xffffff, 0x444444);
+scene.add(hemilight);
 
-const wireframe = new THREE.WireframeGeometry( geometry );
-const line = new THREE.LineSegments( wireframe );
-line.material.depthTest = false;
-line.material.opacity = 0.25;
-line.material.transparent = true;
-scene.add( line );
-const light = new THREE.DirectionalLight( 0xffffff, 1 );   
-light.position.set( 0, 0, 1 );
-scene.add( light );
-//animate the cube
 function animate() {
     requestAnimationFrame(animate);
-    
-    // cube.rotation.x += 0.01;
-    // cube.rotation.y += 0.01;
-    controls.update();
+    cube.rotation.x += 0.01;
+    cube.rotation.y += 0.01;
     renderer.render(scene, camera);
-
-    
+    controls.update();
 }
+
 animate();
